@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+
+    {% load staticfiles %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/chat.js' %}"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="chat">
+            <div class="chat-left left"></div>
+            <div class="chat-right left">
+                {% for user in user_list %}
+                    <div class="user-name">{{ user }}</div>
+                {% endfor %}
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <div class="text-input">
+            <p>{{ user_name }}</p>
+            <textarea name="" id="chat-input" cols="30" rows="10"></textarea>
+            <button type="submit" id="btn-send" class="btn btn-primary">Send message</button>
+            <input type="hidden" id="user-name" value="{{ user_name }}">
+        </div>
+    </div>
+</body>
+</html>
