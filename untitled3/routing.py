@@ -1,5 +1,4 @@
 from channels.routing import route
-
 from chat.consumers import ws_message, ws_add, ws_disconnect
 
 channel_routing = [

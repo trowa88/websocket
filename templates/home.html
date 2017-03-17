@@ -18,7 +18,7 @@
             <div class="chat-left left"></div>
             <div class="chat-right left">
                 {% for user in user_list %}
-                    <div class="user-name">{{ user }}</div>
+                    <div class="user-name" id="{{ user }}">{{ user }}</div>
                 {% endfor %}
             </div>
             <div class="clear"></div>

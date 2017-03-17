@@ -1,15 +1,14 @@
 import json
 
-from channels import Channel, Group
-from channels.sessions import channel_session, enforce_ordering
-from channels.auth import channel_session_user, channel_session_user_from_http
+from channels import Group
+from channels.sessions import channel_session
 
 
 # Connected to websocket.connect
 from chat.models import ChatUser
 
 
-@channel_session_user_from_http
+@channel_session
 def ws_add(message):
     # Accept connection
     message.reply_channel.send({"accept": True})
@@ -18,28 +17,35 @@ def ws_add(message):
 
 
 # Connected to websocket.receive
-@channel_session_user
+@channel_session
 def ws_message(message):
     message_json = json.loads(message['text'])
     user_id = message_json['user_name']
     message_type = message_json['type']
+    message.channel_session['user'] = user_id
 
     if message_type == 'connect':
         print('connect')
         ChatUser(user_id=user_id).save()
-    elif message_type == 'disconeect':
-        print('disconnect')
-        obj = ChatUser.objects.filter(user_id=user_id)
-        obj.delete()
-    else:
-        pass
+
     Group("chat").send({
         "text": message['text']
     })
 
 
 # Connected to websocket.disconnect
-@channel_session_user
+@channel_session
 def ws_disconnect(message):
-
+    print('disconnect')
+    user_id = message.channel_session['user']
+    obj = ChatUser.objects.filter(user_id=user_id)
+    obj.delete()
+    context = {
+        'type': 'disconnect',
+        'text': '',
+        'user_name': user_id
+    }
     Group("chat").discard(message.reply_channel)
+    Group("chat").send({
+        "text": json.dumps(context)
+    })

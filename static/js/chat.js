@@ -5,6 +5,7 @@ $(document).ready(function(){
         'text': '',
         'user_name': ''
     };
+
     socket.onmessage = function(e) {
         console.log(e);
         var data = JSON.parse(e.data);
@@ -21,25 +22,27 @@ $(document).ready(function(){
         }
         else {
             $('#' + user_name).remove();
-            console.log('remove');
+            // console.log('remove');
         }
     };
+
     socket.onopen = function() {
         msg.type = 'connect';
         msg.user_name = $('#user-name').val();
         socket.send(JSON.stringify(msg));
     };
+
     socket.onclose = function() {
-        msg.type = 'disconnect';
-        msg.user_name = $('#user_name').val();
-        socket.send(JSON.stringify(msg));
+        // console.log('disconnect');
+        var user_name = $('#user_name').val();
+        $('#' + user_name).remove();
     };
 
     if (socket.readyState == WebSocket.OPEN)
         socket.onopen();
 
     $('#btn-send').click(function() {
-        console.log(socket);
+        // console.log(socket);
         msg.type = 'chat';
         msg.text = $('#chat-input').val();
         msg.user_name = $('#user-name').val();
